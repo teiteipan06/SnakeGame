@@ -5,7 +5,14 @@ var gameInterval
 var snack
 
 function gameStart() {
-  gameInterval = setInterval(gameRoutine, 1000)
+  snack = {
+    body: [
+      { x: BLOCK_COUNT / 2, y: BLOCK_COUNT / 2 }
+    ],
+    size: 5,
+    direction: { x: 0, y: -1 }
+  }
+  gameInterval = setInterval(gameRoutine, 100)
 }
 
 function gameRoutine() {
@@ -34,4 +41,14 @@ function updateCanvas() {
 
   context.fillStyle = 'black'
   context.fillRect(0, 0, canvas.width, canvas.height)
+
+  context.fillStyle = 'lime'
+  for(var i=0; i<snack.body.length; i++) {
+    context.fillRect(
+      snack.body[i].x * BLOCK_SIZE + 1,
+      snack.body[i].y * BLOCK_SIZE + 1,
+      BLOCK_SIZE - 1,
+      BLOCK_SIZE - 1
+    )
+  }
 }

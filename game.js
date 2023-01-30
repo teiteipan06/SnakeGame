@@ -52,3 +52,16 @@ function updateCanvas() {
     )
   }
 }
+
+window.onload = onPageLoaded
+
+function onPageLoaded() {
+  document.addEventListener('keydown', handleKeyDown)
+}
+
+function handleKeyDown(event) {
+  
+  if (event.keyCode === 37) { // left arrow
+  } else if (event.keyCode === 39) {// right arrow
+  }
+}

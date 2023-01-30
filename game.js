@@ -12,7 +12,7 @@ function gameStart() {
     size: 5,
     direction: { x: 0, y: -1 }
   }
-  gameInterval = setInterval(gameRoutine, 100)
+  gameInterval = setInterval(gameRoutine, 200)
 }
 
 function gameRoutine() {
@@ -60,8 +60,13 @@ function onPageLoaded() {
 }
 
 function handleKeyDown(event) {
-  
+  var originX = snack.direction.x
+  var originY = snack.direction.y
   if (event.keyCode === 37) { // left arrow
+    snack.direction.x = originY
+    snack.direction.y = originX
   } else if (event.keyCode === 39) {// right arrow
+    snack.direction.x = -originY
+    snack.direction.y = originX
   }
 }

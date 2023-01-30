@@ -17,6 +17,11 @@ function gameStart() {
 
 function gameRoutine() {
   moveSnack()
+  
+  if (snackIsDead()) {
+    ggler()
+    return
+  }
   updateCanvas()
 }
 
@@ -69,4 +74,31 @@ function handleKeyDown(event) {
     snack.direction.x = -originY
     snack.direction.y = originX
   }
+}
+
+function snackIsDead() {
+  // hit walls
+  if (snack.body[0].x < 0) {
+    return true
+  } else if (snack.body[0].x >= BLOCK_COUNT) {
+    return true
+  } else if (snack.body[0].y < 0) {
+    return true
+  } else if (snack.body[0].y >= BLOCK_COUNT) {
+    return true
+  }
+  
+  // hit body
+  for (var i=1; i<snack.body.length; i++) {
+    if (snack.body[0].x === snack.body[i].x &&
+        snack.body[0].y === snack.body[i].y) {
+      return true
+    }
+  }
+  
+  return false
+}
+
+function ggler() {
+  clearInterval(gameInterval)
 }

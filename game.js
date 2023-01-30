@@ -12,7 +12,24 @@ function gameStart() {
     size: 5,
     direction: { x: 0, y: -1 }
   }
+
+  putApple()
   gameInterval = setInterval(gameRoutine, 200)
+}
+
+function putApple() {
+  apple = {
+    x: Math.floor(Math.random() * BLOCK_COUNT),
+    y: Math.floor(Math.random() * BLOCK_COUNT)
+  }
+
+  for (var i=0; i<snack.body.length; i++) {
+    if (snack.body[i].x === apple.x &&
+        snack.body[i].y === apple.y) {
+      putApple()
+      break
+    }
+  }
 }
 
 function gameRoutine() {
@@ -22,8 +39,20 @@ function gameRoutine() {
     ggler()
     return
   }
+
+  if (snack.body[0].x === apple.x &&
+      snack.body[0].y === apple.y) {
+    eatApple()
+  }
+
   updateCanvas()
 }
+
+function eatApple() {
+  snack.size += 1
+  putApple()
+}
+
 
 function moveSnack() {
   var newBlock = {
@@ -47,7 +76,7 @@ function updateCanvas() {
   context.fillStyle = 'black'
   context.fillRect(0, 0, canvas.width, canvas.height)
 
-  context.fillStyle = 'lime'
+  context.fillStyle = 'pink'
   for(var i=0; i<snack.body.length; i++) {
     context.fillRect(
       snack.body[i].x * BLOCK_SIZE + 1,
@@ -56,6 +85,14 @@ function updateCanvas() {
       BLOCK_SIZE - 1
     )
   }
+
+  context.fillStyle = 'red'
+  context.fillRect(
+    apple.x * BLOCK_SIZE + 1,
+    apple.y * BLOCK_SIZE + 1,
+    BLOCK_SIZE - 1,
+    BLOCK_SIZE - 1
+  )
 }
 
 window.onload = onPageLoaded
@@ -69,7 +106,7 @@ function handleKeyDown(event) {
   var originY = snack.direction.y
   if (event.keyCode === 37) { // left arrow
     snack.direction.x = originY
-    snack.direction.y = originX
+    snack.direction.y = -originX
   } else if (event.keyCode === 39) {// right arrow
     snack.direction.x = -originY
     snack.direction.y = originX

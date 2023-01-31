@@ -3,6 +3,8 @@ var BLOCK_COUNT = 20
 
 var gameInterval
 var snack
+var apple
+var score
 
 function gameStart() {
   snack = {
@@ -14,8 +16,15 @@ function gameStart() {
   }
 
   putApple()
+  updateScore(0)
   gameInterval = setInterval(gameRoutine, 200)
 }
+
+function updateScore(newScore) {
+  score = newScore
+  document.getElementById('score_id').innerHTML = score 
+}
+
 
 function putApple() {
   apple = {
@@ -51,6 +60,7 @@ function gameRoutine() {
 function eatApple() {
   snack.size += 1
   putApple()
+  updateScore(score + 1)
 }
 
 

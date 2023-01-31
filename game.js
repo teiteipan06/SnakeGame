@@ -5,6 +5,7 @@ var gameInterval
 var snack
 var apple
 var score
+var level
 
 function gameStart() {
   snack = {
@@ -14,24 +15,32 @@ function gameStart() {
     size: 5,
     direction: { x: 0, y: -1 }
   }
-
+  
   putApple()
   updateScore(0)
-  gameInterval = setInterval(gameRoutine, 200)
+  updateGameLevel(1)
+}
+
+function updateGameLevel(newLevel) {
+  level = newLevel
+  
+  if (gameInterval) {
+    clearInterval(gameInterval)
+  }
+  gameInterval = setInterval(gameRoutine, 1000 / (10 + level))
 }
 
 function updateScore(newScore) {
   score = newScore
-  document.getElementById('score_id').innerHTML = score 
+  document.getElementById('score_id').innerHTML = score
 }
-
 
 function putApple() {
   apple = {
     x: Math.floor(Math.random() * BLOCK_COUNT),
     y: Math.floor(Math.random() * BLOCK_COUNT)
   }
-
+  
   for (var i=0; i<snack.body.length; i++) {
     if (snack.body[i].x === apple.x &&
         snack.body[i].y === apple.y) {
@@ -41,22 +50,6 @@ function putApple() {
   }
 }
 
-function gameRoutine() {
-  moveSnack()
-  
-  if (snackIsDead()) {
-    ggler()
-    return
-  }
-
-  if (snack.body[0].x === apple.x &&
-      snack.body[0].y === apple.y) {
-    eatApple()
-  }
-
-  updateCanvas()
-}
-
 function eatApple() {
   snack.size += 1
   putApple()
@@ -64,63 +57,31 @@ function eatApple() {
 }
 
 
-function moveSnack() {
-  var newBlock = {
-    x: snack.body[0].x + snack.direction.x,
-    y: snack.body[0].y + snack.direction.y
+
+
+
+
+
+
+
+
+
+
+
+function gameRoutine() {
+  moveSnack()
+  
+  if (snackIsDead()) {
+    ggler()
+    return
   }
-
-  snack.body.unshift(newBlock)
-
-  while(snack.body.length > snack.size) {
-    snack.body.pop()
+  
+  if (snack.body[0].x === apple.x &&
+      snack.body[0].y === apple.y) {
+    eatApple()
   }
-}
-
-
-
-function updateCanvas() {
-  var canvas = document.getElementById('canvas_id')
-  var context = canvas.getContext('2d')
-
-  context.fillStyle = 'black'
-  context.fillRect(0, 0, canvas.width, canvas.height)
-
-  context.fillStyle = 'pink'
-  for(var i=0; i<snack.body.length; i++) {
-    context.fillRect(
-      snack.body[i].x * BLOCK_SIZE + 1,
-      snack.body[i].y * BLOCK_SIZE + 1,
-      BLOCK_SIZE - 1,
-      BLOCK_SIZE - 1
-    )
-  }
-
-  context.fillStyle = 'red'
-  context.fillRect(
-    apple.x * BLOCK_SIZE + 1,
-    apple.y * BLOCK_SIZE + 1,
-    BLOCK_SIZE - 1,
-    BLOCK_SIZE - 1
-  )
-}
-
-window.onload = onPageLoaded
-
-function onPageLoaded() {
-  document.addEventListener('keydown', handleKeyDown)
-}
-
-function handleKeyDown(event) {
-  var originX = snack.direction.x
-  var originY = snack.direction.y
-  if (event.keyCode === 37) { // left arrow
-    snack.direction.x = originY
-    snack.direction.y = -originX
-  } else if (event.keyCode === 39) {// right arrow
-    snack.direction.x = -originY
-    snack.direction.y = originX
-  }
+  
+  updateCanvas()
 }
 
 function snackIsDead() {
@@ -148,4 +109,69 @@ function snackIsDead() {
 
 function ggler() {
   clearInterval(gameInterval)
+}
+
+function moveSnack() {
+  var newBlock = {
+    x: snack.body[0].x + snack.direction.x,
+    y: snack.body[0].y + snack.direction.y
+  }
+  
+  snack.body.unshift(newBlock)
+  
+  while (snack.body.length > snack.size) {
+    snack.body.pop()
+  }
+}
+
+function updateCanvas() {
+  var canvas = document.getElementById('canvas_id')
+  var context = canvas.getContext('2d')
+  
+  context.fillStyle = 'black'
+  context.fillRect(0, 0, canvas.width, canvas.height)
+  
+  context.fillStyle = 'lime'
+  for (var i=0; i<snack.body.length; i++) {
+    context.fillRect(
+      snack.body[i].x * BLOCK_SIZE + 1,
+      snack.body[i].y * BLOCK_SIZE + 1,
+      BLOCK_SIZE - 1,
+      BLOCK_SIZE - 1
+    )
+  }
+  
+  context.fillStyle = 'red'
+  context.fillRect(
+    apple.x * BLOCK_SIZE + 1,
+    apple.y * BLOCK_SIZE + 1,
+    BLOCK_SIZE - 1,
+    BLOCK_SIZE - 1
+  )
+}
+
+window.onload = onPageLoaded
+
+function onPageLoaded() {
+  document.addEventListener('keydown', handleKeyDown)
+}
+
+
+
+
+
+
+
+
+function handleKeyDown(event) {
+  var originX = snack.direction.x
+  var originY = snack.direction.y
+  
+  if (event.keyCode === 37) { // left arrow 
+    snack.direction.x = originY
+    snack.direction.y = -originX
+  } else if (event.keyCode === 39) { // right arrow 
+    snack.direction.x = -originY
+    snack.direction.y = originX
+  }
 }
